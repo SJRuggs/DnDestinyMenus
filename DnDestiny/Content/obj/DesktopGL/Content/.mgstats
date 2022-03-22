@@ -1,0 +1,5 @@
+Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"C:/Users/EV-02/source/repos/DnDestinyMenus/DnDestiny/Content/BoldFont.spritefont","C:/Users/EV-02/source/repos/DnDestinyMenus/DnDestiny/Content/bin/DesktopGL/Content/BoldFont.xnb","FontDescriptionProcessor","SpriteFontContent",2013,37922,0.175589
+"C:/Users/EV-02/source/repos/DnDestinyMenus/DnDestiny/Content/DefaultFont.spritefont","C:/Users/EV-02/source/repos/DnDestinyMenus/DnDestiny/Content/bin/DesktopGL/Content/DefaultFont.xnb","FontDescriptionProcessor","SpriteFontContent",2013,37922,0.0115515
+"C:/Users/EV-02/source/repos/DnDestinyMenus/DnDestiny/Content/SmallFont.spritefont","C:/Users/EV-02/source/repos/DnDestinyMenus/DnDestiny/Content/bin/DesktopGL/Content/SmallFont.xnb","FontDescriptionProcessor","SpriteFontContent",2013,21538,0.0099678
+"C:/Users/EV-02/source/repos/DnDestinyMenus/DnDestiny/Content/TitleFont.spritefont","C:/Users/EV-02/source/repos/DnDestinyMenus/DnDestiny/Content/bin/DesktopGL/Content/TitleFont.xnb","FontDescriptionProcessor","SpriteFontContent",2013,70690,0.0174398
