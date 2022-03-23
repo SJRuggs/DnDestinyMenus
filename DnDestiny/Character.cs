@@ -34,8 +34,8 @@ namespace DnDestiny
             initiative = 0;
             stats = new int[6];
             saves = new bool[6];
-            profs = new bool[18];
-            experts = new bool[18];
+            profs = new bool[19];
+            experts = new bool[19];
             otherProfs = new List<string>();
         }
         #endregion

@@ -1,0 +1,3 @@
+A saving throw - also called a save - represents an attempt to resist a spell, a trap, a poison, a disease, or a similar threat. You don't normally decide to make a saving throw; you are forced to make one because your character is at risk of harm. To make a saving throw, roll a d20 and add the appropriate ability modifier. For example, you use your Dexterity modifier for a Dexterity saving throw.
+
+Each class gives proficiency in at least two saving throws. The gunslinger, for example, is proficient in Dexterity saves. As with skill proficiencies, proficiency in a saving throw lets a character add his or her proficiency bonus to saving throws made using a particular ability score.

@@ -25,6 +25,7 @@ namespace DnDestiny
         public static int screenWidth;
         public static int screenHeight;
         private Vector2 factor;
+        private Texture2D cursor;
 
         // field graphics
         private Texture2D panelPixelWhite;
@@ -44,6 +45,7 @@ namespace DnDestiny
         List<string> sheetStrings;
         List<SpriteFont> sheetFonts;
         List<Vector2> sheetStringsLocations;
+        string text;
         #endregion
 
         #region Readers
@@ -76,6 +78,7 @@ namespace DnDestiny
             // set background
             img = new FileStream("../../../Assets/AppImages/background.png", FileMode.Open, FileAccess.Read);
             background = Texture2D.FromStream(GraphicsDevice, img);
+            IsMouseVisible = false;
 
             // screen size
             screenWidth = 1920;
@@ -100,55 +103,15 @@ namespace DnDestiny
 
             #endregion
 
-            #region Character Sheet Fields
+            #region Characters
+            // retrieve names
+            txt = new StreamReader("../../../Characters/MetaData.txt");
+            text = txt.ReadLine();
             sheetFields = new List<Field>();
             sheetStrings = new List<string>();
             sheetFonts = new List<SpriteFont>();
             sheetStringsLocations = new List<Vector2>();
             characters = new List<Character>();
-
-            #region Strength
-            txt = new StreamReader("../../../Assets/AppData/strengthDescription.txt");
-            string text = txt.ReadLine();
-            readStrings = new List<string>();
-            while (text != null)
-            {
-                readStrings.Add(text);
-                text = txt.ReadLine();
-            }
-            sheetFields.Add(new Field(factor, defaultFont, boldFont, titleFont, panelPixelWhite, panelPixelBlack, "STRENGTH", "Ability Score", readStrings, new Rectangle(150, 200, 100, 100)));
-            #endregion
-
-            #region Dexterity
-            txt = new StreamReader("../../../Assets/AppData/dexterityDescription.txt");
-            text = txt.ReadLine();
-            readStrings = new List<string>();
-            while (text != null)
-            {
-                readStrings.Add(text);
-                text = txt.ReadLine();
-            }
-            sheetFields.Add(new Field(factor, defaultFont, boldFont, titleFont, panelPixelWhite, panelPixelBlack, "DEXTERITY", "Ability Score", readStrings, new Rectangle(150, 350, 100, 100)));
-            #endregion
-
-            #region Constitution
-            txt = new StreamReader("../../../Assets/AppData/constitutionDescription.txt");
-            text = txt.ReadLine();
-            readStrings = new List<string>();
-            while (text != null)
-            {
-                readStrings.Add(text);
-                text = txt.ReadLine();
-            }
-            sheetFields.Add(new Field(factor, defaultFont, boldFont, titleFont, panelPixelWhite, panelPixelBlack, "CONSTITUTION", "Ability Score", readStrings, new Rectangle(150, 500, 100, 100)));
-            #endregion
-
-            #endregion
-
-            #region Characters
-            // retrieve names
-            txt = new StreamReader("../../../Characters/MetaData.txt");
-            text = txt.ReadLine();
             while (text != null)
             {
                 characters.Add(new Character(text));
@@ -164,32 +127,8 @@ namespace DnDestiny
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            #region Character Sheet Fields
-
-            #region Strength
-            img = new FileStream(string.Format("../../../Assets/AppImages/strength active.png"), FileMode.Open, FileAccess.Read);
-            sheetFields[0].ActiveT = Texture2D.FromStream(GraphicsDevice, img);
-            img = new FileStream(string.Format("../../../Assets/AppImages/strength inactive.png"), FileMode.Open, FileAccess.Read);
-            sheetFields[0].InactiveT = Texture2D.FromStream(GraphicsDevice, img);
-            #endregion
-
-            #region Dexterity
-            img = new FileStream(string.Format("../../../Assets/AppImages/dexterity active.png"), FileMode.Open, FileAccess.Read);
-            sheetFields[1].ActiveT = Texture2D.FromStream(GraphicsDevice, img);
-            img = new FileStream(string.Format("../../../Assets/AppImages/dexterity inactive.png"), FileMode.Open, FileAccess.Read);
-            sheetFields[1].InactiveT = Texture2D.FromStream(GraphicsDevice, img);
-            #endregion
-
-            #region Constitution
-            img = new FileStream(string.Format("../../../Assets/AppImages/constitution active.png"), FileMode.Open, FileAccess.Read);
-            sheetFields[2].ActiveT = Texture2D.FromStream(GraphicsDevice, img);
-            img = new FileStream(string.Format("../../../Assets/AppImages/constitution inactive.png"), FileMode.Open, FileAccess.Read);
-            sheetFields[2].InactiveT = Texture2D.FromStream(GraphicsDevice, img);
-            #endregion
-
-
-            #endregion
+            img = new FileStream(string.Format("../../../Assets/AppImages/cursor.png"), FileMode.Open, FileAccess.Read);
+            cursor = Texture2D.FromStream(GraphicsDevice, img);
         }
 
         protected override void Update(GameTime gameTime)
@@ -216,9 +155,11 @@ namespace DnDestiny
             for (int i = 0; i < sheetStrings.Count; i++)
                 DrawString(sheetStrings[i], sheetFonts[i], sheetStringsLocations[i]);
             for (int i = 0; i < sheetFields.Count; i++)
-                sheetFields[i].DrawString(_spriteBatch, mState);
+                sheetFields[i].DrawPopup(_spriteBatch, mState);
             #endregion
 
+            // draw cursor over mouse
+            _spriteBatch.Draw(cursor, mState.Position.ToVector2(), Color.White);
             _spriteBatch.End();
             base.Draw(gameTime);
         }
@@ -237,70 +178,208 @@ namespace DnDestiny
             cha.Alignment = chaReader.ReadLine();
             for (int i = 0; i < 6; i++) cha.Stats[i] = int.Parse(chaReader.ReadLine());
             for (int i = 0; i < 6; i++) cha.Saves[i] = bool.Parse(chaReader.ReadLine());
-            for (int i = 0; i < 18; i++) cha.Profs[i] = bool.Parse(chaReader.ReadLine());
-            for (int i = 0; i < 18; i++) cha.Experts[i] = bool.Parse(chaReader.ReadLine());
+            for (int i = 0; i < 19; i++) cha.Profs[i] = bool.Parse(chaReader.ReadLine());
+            for (int i = 0; i < 19; i++) cha.Experts[i] = bool.Parse(chaReader.ReadLine());
             cha.OtherProfs = chaReader.ReadLine().Split('$').ToList();
             cha.EquippedArmor = chaReader.ReadLine();
             cha.Speed = int.Parse(chaReader.ReadLine());
             cha.Glimmer = int.Parse(chaReader.ReadLine());
             sheetStrings.Clear();
             #endregion
+            
+            #region Character Sheet Fields
+            sheetFields.Clear();
+            sheetStrings.Clear();
+            sheetFonts.Clear();
+            sheetStringsLocations.Clear();
 
             #region Strength
-            sheetStrings.Add("STRENGTH");
-            sheetFonts.Add(smallFont);
-            sheetStringsLocations.Add(new Vector2(
-                sheetFields[0].StartPosition.X + sheetFields[0].StartPosition.Width / 2 - sheetFonts[0].MeasureString(sheetStrings[0]).X / 2,
-                sheetFields[0].StartPosition.Y + sheetFields[0].StartPosition.Height + 10));
-            sheetStrings.Add(cha.Stats[0].ToString());
-            sheetFonts.Add(titleFont);
-            sheetStringsLocations.Add(new Vector2(
-                sheetFields[0].StartPosition.X + sheetFields[0].StartPosition.Width / 2 - sheetFonts[1].MeasureString(sheetStrings[1]).X / 2,
-                sheetFields[0].StartPosition.Y + sheetFields[0].StartPosition.Height / 2 - sheetFonts[1].MeasureString(sheetStrings[1]).Y));
-            if ((cha.Stats[0] - 10) / 2 > -1) { sheetStrings.Add("(+" + ((cha.Stats[0] - 10) / 2) + ")"); }
-            else { sheetStrings.Add("(" + ((cha.Stats[0] - 10) / 2) + ")"); }
-            sheetFonts.Add(titleFont);
-            sheetStringsLocations.Add(new Vector2(
-                sheetFields[0].StartPosition.X + sheetFields[0].StartPosition.Width / 2 - sheetFonts[2].MeasureString(sheetStrings[2]).X / 2,
-                sheetFields[0].StartPosition.Y + sheetFields[0].StartPosition.Height / 2));
+            txt = new StreamReader("../../../Assets/AppData/strengthDescription.txt");
+            text = txt.ReadLine();
+            readStrings = new List<string>();
+            while (text != null)
+            {
+                readStrings.Add(text);
+                text = txt.ReadLine();
+            }
+            sheetFields.Add(new Field(factor, defaultFont, boldFont, titleFont, panelPixelWhite, panelPixelBlack, "STRENGTH", "Ability Score", readStrings, new Rectangle(100, 100, 100, 100)));
             #endregion
 
             #region Dexterity
-            sheetStrings.Add("DEXTERITY");
-            sheetFonts.Add(smallFont);
-            sheetStringsLocations.Add(new Vector2(
-                sheetFields[1].StartPosition.X + sheetFields[1].StartPosition.Width / 2 - sheetFonts[3].MeasureString(sheetStrings[3]).X / 2,
-                sheetFields[1].StartPosition.Y + sheetFields[1].StartPosition.Height + 10));
-            sheetStrings.Add(cha.Stats[1].ToString());
-            sheetFonts.Add(titleFont);
-            sheetStringsLocations.Add(new Vector2(
-                sheetFields[1].StartPosition.X + sheetFields[1].StartPosition.Width / 2 - sheetFonts[4].MeasureString(sheetStrings[4]).X / 2,
-                sheetFields[1].StartPosition.Y + sheetFields[1].StartPosition.Height / 2 - sheetFonts[4].MeasureString(sheetStrings[4]).Y));
-            if ((cha.Stats[1] - 10) / 2 > -1) { sheetStrings.Add("(+" + ((cha.Stats[1] - 10) / 2) + ")"); }
-            else { sheetStrings.Add("(" + ((cha.Stats[1] - 10) / 2) + ")"); }
-            sheetFonts.Add(titleFont);
-            sheetStringsLocations.Add(new Vector2(
-                sheetFields[1].StartPosition.X + sheetFields[1].StartPosition.Width / 2 - sheetFonts[5].MeasureString(sheetStrings[5]).X / 2,
-                sheetFields[1].StartPosition.Y + sheetFields[1].StartPosition.Height / 2));
+            txt = new StreamReader("../../../Assets/AppData/dexterityDescription.txt");
+            text = txt.ReadLine();
+            readStrings.Clear();
+            while (text != null)
+            {
+                readStrings.Add(text);
+                text = txt.ReadLine();
+            }
+            sheetFields.Add(new Field(factor, defaultFont, boldFont, titleFont, panelPixelWhite, panelPixelBlack, "DEXTERITY", "Ability Score", readStrings, new Rectangle(100, 250, 100, 100)));
             #endregion
 
             #region Constitution
-            sheetStrings.Add("CONSTITUTION");
+            txt = new StreamReader("../../../Assets/AppData/constitutionDescription.txt");
+            text = txt.ReadLine();
+            readStrings.Clear();
+            while (text != null)
+            {
+                readStrings.Add(text);
+                text = txt.ReadLine();
+            }
+            sheetFields.Add(new Field(factor, defaultFont, boldFont, titleFont, panelPixelWhite, panelPixelBlack, "CONSTITUTION", "Ability Score", readStrings, new Rectangle(100, 400, 100, 100)));
+            #endregion
+
+            #region Intelligence
+            txt = new StreamReader("../../../Assets/AppData/intelligenceDescription.txt");
+            text = txt.ReadLine();
+            readStrings.Clear();
+            while (text != null)
+            {
+                readStrings.Add(text);
+                text = txt.ReadLine();
+            }
+            sheetFields.Add(new Field(factor, defaultFont, boldFont, titleFont, panelPixelWhite, panelPixelBlack, "INTELLIGENCE", "Ability Score", readStrings, new Rectangle(100, 550, 100, 100)));
+            #endregion
+
+            #region Wisdom
+            txt = new StreamReader("../../../Assets/AppData/wisdomDescription.txt");
+            text = txt.ReadLine();
+            readStrings.Clear();
+            while (text != null)
+            {
+                readStrings.Add(text);
+                text = txt.ReadLine();
+            }
+            sheetFields.Add(new Field(factor, defaultFont, boldFont, titleFont, panelPixelWhite, panelPixelBlack, "WISDOM", "Ability Score", readStrings, new Rectangle(100, 700, 100, 100)));
+            #endregion
+
+            #region Charisma
+            txt = new StreamReader("../../../Assets/AppData/charismaDescription.txt");
+            text = txt.ReadLine();
+            readStrings.Clear();
+            while (text != null)
+            {
+                readStrings.Add(text);
+                text = txt.ReadLine();
+            }
+            sheetFields.Add(new Field(factor, defaultFont, boldFont, titleFont, panelPixelWhite, panelPixelBlack, "CHARISMA", "Ability Score", readStrings, new Rectangle(100, 850, 100, 100)));
+            #endregion
+
+            #region Saves
+            txt = new StreamReader("../../../Assets/AppData/savesToolTip.txt");
+            text = txt.ReadLine();
+            readStrings.Clear();
+            while (text != null)
+            {
+                readStrings.Add(text);
+                text = txt.ReadLine();
+            }
+            for (int i = 0; i < 6; i++)
+                sheetFields.Add(new Field(factor, defaultFont, boldFont, titleFont, panelPixelWhite, panelPixelBlack,
+                    "SAVING THROWS", "Character Attribute", readStrings, new Rectangle(250, 100 + 36 * i, 400, 36)));
+            #endregion
+
+            #region Strength
+            img = new FileStream(string.Format("../../../Assets/AppImages/strength active.png"), FileMode.Open, FileAccess.Read);
+            sheetFields[0].ActiveT = Texture2D.FromStream(GraphicsDevice, img);
+            img = new FileStream(string.Format("../../../Assets/AppImages/strength inactive.png"), FileMode.Open, FileAccess.Read);
+            sheetFields[0].InactiveT = Texture2D.FromStream(GraphicsDevice, img);
+            #endregion
+
+            #region Dexterity
+            img = new FileStream(string.Format("../../../Assets/AppImages/dexterity active.png"), FileMode.Open, FileAccess.Read);
+            sheetFields[1].ActiveT = Texture2D.FromStream(GraphicsDevice, img);
+            img = new FileStream(string.Format("../../../Assets/AppImages/dexterity inactive.png"), FileMode.Open, FileAccess.Read);
+            sheetFields[1].InactiveT = Texture2D.FromStream(GraphicsDevice, img);
+            #endregion
+
+            #region Constitution
+            img = new FileStream(string.Format("../../../Assets/AppImages/constitution active.png"), FileMode.Open, FileAccess.Read);
+            sheetFields[2].ActiveT = Texture2D.FromStream(GraphicsDevice, img);
+            img = new FileStream(string.Format("../../../Assets/AppImages/constitution inactive.png"), FileMode.Open, FileAccess.Read);
+            sheetFields[2].InactiveT = Texture2D.FromStream(GraphicsDevice, img);
+            #endregion
+
+            #region Intelligence
+            img = new FileStream(string.Format("../../../Assets/AppImages/intelligence active.png"), FileMode.Open, FileAccess.Read);
+            sheetFields[3].ActiveT = Texture2D.FromStream(GraphicsDevice, img);
+            img = new FileStream(string.Format("../../../Assets/AppImages/intelligence inactive.png"), FileMode.Open, FileAccess.Read);
+            sheetFields[3].InactiveT = Texture2D.FromStream(GraphicsDevice, img);
+            #endregion
+
+            #region Wisdom
+            img = new FileStream(string.Format("../../../Assets/AppImages/intelligence active.png"), FileMode.Open, FileAccess.Read);
+            sheetFields[4].ActiveT = Texture2D.FromStream(GraphicsDevice, img);
+            img = new FileStream(string.Format("../../../Assets/AppImages/intelligence inactive.png"), FileMode.Open, FileAccess.Read);
+            sheetFields[4].InactiveT = Texture2D.FromStream(GraphicsDevice, img);
+            #endregion
+
+            #region Charisma
+            img = new FileStream(string.Format("../../../Assets/AppImages/intelligence active.png"), FileMode.Open, FileAccess.Read);
+            sheetFields[5].ActiveT = Texture2D.FromStream(GraphicsDevice, img);
+            img = new FileStream(string.Format("../../../Assets/AppImages/intelligence inactive.png"), FileMode.Open, FileAccess.Read);
+            sheetFields[5].InactiveT = Texture2D.FromStream(GraphicsDevice, img);
+            #endregion
+
+            #region Saves
+            img = new FileStream(string.Format("../../../Assets/AppImages/proficienciesTop.png"), FileMode.Open, FileAccess.Read);
+            sheetFields[6].ActiveT = Texture2D.FromStream(GraphicsDevice, img);
+            sheetFields[6].InactiveT = Texture2D.FromStream(GraphicsDevice, img);
+            img = new FileStream(string.Format("../../../Assets/AppImages/proficienciesMiddle.png"), FileMode.Open, FileAccess.Read);
+            for (int i = 7; i < 11; i++)
+            {
+                sheetFields[i].ActiveT = Texture2D.FromStream(GraphicsDevice, img);
+                sheetFields[i].InactiveT = Texture2D.FromStream(GraphicsDevice, img);
+            }
+            img = new FileStream(string.Format("../../../Assets/AppImages/proficienciesBottom.png"), FileMode.Open, FileAccess.Read);
+            sheetFields[11].ActiveT = Texture2D.FromStream(GraphicsDevice, img);
+            sheetFields[11].InactiveT = Texture2D.FromStream(GraphicsDevice, img);
+            #endregion
+
+            #endregion
+
+            #region Stats
+            for (int i = 0; i < 6; i++)
+            {
+                sheetStrings.Add(sheetFields[i].Title);
+                sheetFonts.Add(smallFont);
+                sheetStringsLocations.Add(new Vector2(
+                    sheetFields[i].StartPosition.X + sheetFields[i].StartPosition.Width / 2 - sheetFonts[i * 3].MeasureString(sheetStrings[i * 3]).X / 2,
+                    sheetFields[i].StartPosition.Y + sheetFields[i].StartPosition.Height + 10));
+                sheetStrings.Add(cha.Stats[i].ToString());
+                sheetFonts.Add(titleFont);
+                sheetStringsLocations.Add(new Vector2(
+                    sheetFields[i].StartPosition.X + sheetFields[i].StartPosition.Width / 2 - sheetFonts[i * 3 + 1].MeasureString(sheetStrings[i * 3 + 1]).X / 2,
+                    sheetFields[i].StartPosition.Y + sheetFields[i].StartPosition.Height / 2 - sheetFonts[i * 3 + 1].MeasureString(sheetStrings[i * 3 + 1]).Y));
+                if ((cha.Stats[i] - 10) / 2 > -1) { sheetStrings.Add("(+" + ((cha.Stats[i] - 10) / 2) + ")"); }
+                else { sheetStrings.Add("(" + ((cha.Stats[i] - 10) / 2) + ")"); }
+                sheetFonts.Add(titleFont);
+                sheetStringsLocations.Add(new Vector2(
+                    sheetFields[i].StartPosition.X + sheetFields[i].StartPosition.Width / 2 - sheetFonts[i * 3 + 2].MeasureString(sheetStrings[i * 3 + 2]).X / 2,
+                    sheetFields[i].StartPosition.Y + sheetFields[i].StartPosition.Height / 2));
+            }
+            #endregion
+
+            #region Saves
+            sheetStrings.Add(string.Format("{0}  Strength",      sheetStrings[2].Substring(1, 2)));
+            sheetStrings.Add(string.Format("{0}  Dexterity",     sheetStrings[5].Substring(1, 2)));
+            sheetStrings.Add(string.Format("{0}  Constitution",  sheetStrings[8].Substring(1, 2)));
+            sheetStrings.Add(string.Format("{0}  Intelligence",  sheetStrings[11].Substring(1, 2)));
+            sheetStrings.Add(string.Format("{0}  Wisdom",        sheetStrings[14].Substring(1, 2)));
+            sheetStrings.Add(string.Format("{0}  Charisma",      sheetStrings[17].Substring(1, 2)));
+            for (int i = 0; i < 6; i++)
+            {
+                sheetFonts.Add(boldFont);
+                sheetStringsLocations.Add(new Vector2(
+                    sheetFields[i + 6].StartPosition.X + 40,
+                    sheetFields[i + 6].StartPosition.Y + 3));
+            }
+            sheetStrings.Add("SAVING THROWS");
             sheetFonts.Add(smallFont);
             sheetStringsLocations.Add(new Vector2(
-                sheetFields[2].StartPosition.X + sheetFields[2].StartPosition.Width / 2 - sheetFonts[6].MeasureString(sheetStrings[6]).X / 2,
-                sheetFields[2].StartPosition.Y + sheetFields[2].StartPosition.Height + 10));
-            sheetStrings.Add(cha.Stats[2].ToString());
-            sheetFonts.Add(titleFont);
-            sheetStringsLocations.Add(new Vector2(
-                sheetFields[2].StartPosition.X + sheetFields[2].StartPosition.Width / 2 - sheetFonts[7].MeasureString(sheetStrings[7]).X / 2,
-                sheetFields[2].StartPosition.Y + sheetFields[2].StartPosition.Height / 2 - sheetFonts[7].MeasureString(sheetStrings[7]).Y));
-            if ((cha.Stats[2] - 10) / 2 > -1) { sheetStrings.Add("(+" + ((cha.Stats[2] - 10) / 2) + ")"); }
-            else { sheetStrings.Add("(" + ((cha.Stats[2] - 10) / 2) + ")"); }
-            sheetFonts.Add(titleFont);
-            sheetStringsLocations.Add(new Vector2(
-                sheetFields[2].StartPosition.X + sheetFields[2].StartPosition.Width / 2 - sheetFonts[8].MeasureString(sheetStrings[8]).X / 2,
-                sheetFields[2].StartPosition.Y + sheetFields[2].StartPosition.Height / 2));
+                sheetFields[sheetFields.Count - 1].StartPosition.X + sheetFields[sheetFields.Count - 1].StartPosition.Width / 2 - 
+                sheetFonts[sheetFonts.Count - 1].MeasureString(sheetStrings[sheetStrings.Count - 1]).X / 2,
+                sheetFields[sheetFields.Count - 1].StartPosition.Y + sheetFields[sheetFields.Count - 1].StartPosition.Height + 10));
             #endregion
 
             // update visibility

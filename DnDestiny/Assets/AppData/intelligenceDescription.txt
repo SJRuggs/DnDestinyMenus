@@ -1,0 +1,15 @@
+Intelligence is a measure of your mental acuity. It reflects how quickly and accurately you can store and recall information, and your ability to reason. Highly intelligent characters tend to do well in academics, but scholarliness is not the only measurement of intelligence.
+
+Arcana$Attempting to detect the Light affinity of a creature, identifying artifacts, or interacting with Hive spells all might call for an Intelligence (Arcana) check.
+
+History$Whether you’re recalling details of your previous mission or recollecting the history of an entire race, an Intelligence (History) check can be used to determine how much you can remember, and how accurate the information you recall is.
+
+Investigation$If you are trying to use deductive reasoning to determine details of a situation, such as where someone hid their sparrow keys or which beam, if broken, would collapse a building, you might be told to make an Intelligence (Investigation) check.
+
+
+
+Medicine$Your Architect could have you make an Intelligence (Medicine) check if you attempt to diagnose a sickness or administer a drug to someone. Intelligence (Medicine) is also used for such things as stabilizing creatures, setting bones, or creating a vaccine.
+
+Nature$Whenever you have a need for knowledge of the natural world, your Architect might have you make an Intelligence (Nature) check to recall or learn that knowledge. This goes for everything from identifying a plant to studying a newly discovered species of animal.
+
+Technology$The Intelligence (Technology) skill can be used whenever you’re dealing with any sort of device or living machine, such as when building a computer, writing a program, or operating a camera.

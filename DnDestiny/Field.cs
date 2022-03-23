@@ -148,7 +148,7 @@ namespace DnDestiny
             (int)(startPosition.Y - (startPosition.Y + mState.Y) * factor.Y), startPosition.Width, startPosition.Height);
         }
 
-        public void DrawString(SpriteBatch _spriteBatch, MouseState mState)
+        public void DrawPopup(SpriteBatch _spriteBatch, MouseState mState)
         {
             if (Position(mState).Contains(mState.Position))
                 if (text != null)
@@ -173,15 +173,21 @@ namespace DnDestiny
                         columns[columns.Count - 1].Add(text[i]);
                         drawHeight += fonts[int.Parse(text[i].Substring(0, 1))].LineSpacing;
                     }
+
+                    // remove redundant lines
+                    for (int i = 0; i < columns.Count; i++)
+                        for (int j = columns[i].Count - 1; j > 0; j--)
+                            if (columns[i][j].Length < 2) { textHeight -= fonts[int.Parse(columns[i][j].Substring(0, 1))].LineSpacing; columns[i].RemoveAt(j); }
+                            else { j = 0; }
                     textHeight = Math.Max(textHeight, drawHeight);
 
                     // move textPosition
                     if (mState.Position.X > Game1.screenWidth / 2) { textPosition.X -= columnWidth * columns.Count; }
                     if (mState.Position.Y > Game1.screenHeight / 2) { textPosition.Y -= (int)(textHeight / columns.Count + 100); }
-                    if (mState.Position.X > Game1.screenWidth / 2) { textPosition.X -= 20; }
-                    else { textPosition.X += 20; }
-                    if (mState.Position.Y > Game1.screenHeight / 2) { textPosition.Y -= 20; }
-                    else { textPosition.Y += 20; }
+                    if (mState.Position.X > Game1.screenWidth / 2) { textPosition.X -= 15; }
+                    else { textPosition.X += 50; }
+                    if (mState.Position.Y > Game1.screenHeight / 2) { textPosition.Y -= 15; }
+                    else { textPosition.Y += 50; }
                     textPosition.X = Math.Max(textPosition.X, 30);
                     textPosition.Y = Math.Max(textPosition.Y, 30);
                     textPosition.X = Math.Min(textPosition.X, Game1.screenWidth - 30 - columns.Count * columnWidth);
@@ -194,14 +200,16 @@ namespace DnDestiny
                     _spriteBatch.DrawString(fonts[1], type, new Vector2(textPosition.X + 10, textPosition.Y + 16 + fonts[0].LineSpacing), Color.White);
                     _spriteBatch.Draw(black, new Rectangle(textPosition.X, textPosition.Y + 100, columnWidth * columns.Count,
                         (int)Math.Min(columnHeight, textHeight + 20)), Color.White * 0.8f);
-                    drawHeight = 0;
                     for (int i = 0; i < columns.Count; i++)
+                    {
+                        drawHeight = 0;
                         for (int j = 0; j < columns[i].Count; j++)
                         {
                             _spriteBatch.DrawString(fonts[int.Parse(columns[i][j].Substring(0, 1))], columns[i][j].Substring(1),
                                 new Vector2(textPosition.X + 10 + columnWidth * i, textPosition.Y + 110 + drawHeight), Color.White);
                             drawHeight += fonts[int.Parse(columns[i][j].Substring(0, 1))].LineSpacing;
                         }
+                    }
                 }
         }
 
