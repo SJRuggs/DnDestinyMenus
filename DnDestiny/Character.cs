@@ -81,6 +81,29 @@ namespace DnDestiny
         public int MaxHP { get { return HitDie + Level * Stats[2]; } }
         public int MaxShield { get { return HitDie + Level * (HitDie / 2 + 1); } }
         public int Initiative { get { return Math.Max((Stats[1] - 10) / 2, initiative); } set { initiative = value; } }
+        public int ProfBonus { get { return (level - 1) / 4 + 2; } }
+        public int AC 
+        { 
+            get 
+            {
+                switch (equippedArmor)
+                {
+                    case "Padded": return 11 + (stats[1] - 10) / 2;
+                    case "Leather": return 11 + (stats[1] - 10) / 2;
+                    case "Spinweave": return 12 + (stats[1] - 10) / 2;
+                    case "Makeshift": return 12 + Math.Max((stats[1] - 10) / 2, 2);
+                    case "Spinwire": return 13 + Math.Max((stats[1] - 10) / 2, 2);
+                    case "Reinforced": return 14 + Math.Max((stats[1] - 10) / 2, 2);
+                    case "Plastwire": return 14 + Math.Max((stats[1] - 10) / 2, 2);
+                    case "Spinplate": return 15 + Math.Max((stats[1] - 10) / 2, 2);
+                    case "Half-Plast": return 14;
+                    case "Plasteel": return 16;
+                    case "Fortified": return 17;
+                    case "Relic": return 18;
+                    default: return 10 + (stats[1] - 10) / 2;
+                }
+            } 
+        }
 
         #endregion
 

@@ -24,7 +24,6 @@ namespace DnDestiny
 
         // status
         private bool isActive;
-        private bool isVisible;
 
         // graphics
         private Texture2D activeT;
@@ -35,24 +34,10 @@ namespace DnDestiny
         #endregion
 
         #region Constructors
-        public Field(Vector2 factor, SpriteFont defaultFont, SpriteFont boldFont, SpriteFont titleFont, Texture2D white, Texture2D black)
-        {
-            this.factor = factor;
-            this.fonts = new SpriteFont[3];
-            this.fonts[0] = titleFont;
-            this.fonts[1] = boldFont;
-            this.fonts[2] = defaultFont;
-            this.textLength = 450;
-
-            this.isActive = false;
-            this.isVisible = false;
-            this.white = white;
-            this.black = black;
-        }
         public Field(Vector2 factor, SpriteFont defaultFont, SpriteFont boldFont, SpriteFont titleFont,
             Texture2D white, Texture2D black, string title, string type, List<string> text, Rectangle startPosition)
         {
-            this.factor = factor;
+            this.factor = new Vector2(factor.X * 0.8f, factor.Y * 0.8f);
             this.startPosition = startPosition;
 
             this.fonts = new SpriteFont[3];
@@ -65,7 +50,6 @@ namespace DnDestiny
             this.text = FormatText(text, textLength);
 
             this.isActive = false;
-            this.isVisible = false;
             this.white = white;
             this.black = black;
         }
@@ -75,15 +59,13 @@ namespace DnDestiny
         public Rectangle StartPosition
         { get { return startPosition; } set { startPosition = value; } }
         public bool IsActive
-        { get { return isActive && isVisible; } set { isActive = true; isVisible = true; } }
-        public bool IsVisible
-        { get { return isVisible; } set { isVisible = value; } }
+        { get { return isActive; } set { isActive = value; } }
         public string Title
         { get { return title; } set { title = value; } }
         public string Type
         { get { return type; } set { type = value; } }
         public List<string> Text
-        { get { return text; } set { text = FormatText(text, textLength); } }
+        { get { return text; } set { text = FormatText(value, textLength); } }
         public Texture2D ActiveT
         { set { activeT = value; } }
         public Texture2D InactiveT
@@ -93,42 +75,46 @@ namespace DnDestiny
         #region Methods
         public List<string> FormatText(List<string> text, int textLength)
         {
-            List<string> splitText = new List<string>();
-            float lineLength;
-            string remainingWords;
-            string movingWords;
-            for (int i = 0; i < text.Count; i++)
-                if (text[i].Contains("$$"))
-                {
-                    splitText.Add("0" + checkCharacters(text[i]).Split("$$")[0].Trim().ToUpper());
-                    splitText.Add("2" + checkCharacters(text[i]).Split("$$")[1].Trim());
-                }
-                else if (text[i].Contains('$'))
-                {
-                    splitText.Add("1" + checkCharacters(text[i]).Split('$')[0].Trim().ToUpper());
-                    splitText.Add("2" + checkCharacters(text[i]).Split('$')[1].Trim());
-                }
-                else
-                { splitText.Add("2" + checkCharacters(text[i]).Trim()); }
-            for (int i = 0; i < splitText.Count; i++)
-                if (splitText[i].Substring(0, 1).Equals("2"))
-                    if (fonts[2].MeasureString(splitText[i]).X > textLength)
+            if (text != null)
+            {
+                List<string> splitText = new List<string>();
+                float lineLength;
+                string remainingWords;
+                string movingWords;
+                for (int i = 0; i < text.Count; i++)
+                    if (text[i].Contains("$$"))
                     {
-                        lineLength = 0;
-                        remainingWords = "";
-                        movingWords = "";
-                        for (int j = 0; j < splitText[i].Split(" ").Length; j++)
-                        {
-                            lineLength += fonts[2].MeasureString(splitText[i].Split(" ")[j]).X;
-                            if (lineLength > textLength)
-                                movingWords += splitText[i].Split(" ")[j] + " ";
-                            else
-                                remainingWords += splitText[i].Split(" ")[j] + " ";
-                        }
-                        splitText[i] = remainingWords;
-                        splitText.Insert(i + 1, "2" + movingWords);
+                        splitText.Add("0" + checkCharacters(text[i]).Split("$$")[0].Trim().ToUpper());
+                        splitText.Add("2" + checkCharacters(text[i]).Split("$$")[1].Trim());
                     }
-            return splitText;
+                    else if (text[i].Contains('$'))
+                    {
+                        splitText.Add("1" + checkCharacters(text[i]).Split('$')[0].Trim().ToUpper());
+                        splitText.Add("2" + checkCharacters(text[i]).Split('$')[1].Trim());
+                    }
+                    else
+                    { splitText.Add("2" + checkCharacters(text[i]).Trim()); }
+                for (int i = 0; i < splitText.Count; i++)
+                    if (splitText[i].Substring(0, 1).Equals("2"))
+                        if (fonts[2].MeasureString(splitText[i]).X > textLength)
+                        {
+                            lineLength = 0;
+                            remainingWords = "";
+                            movingWords = "";
+                            for (int j = 0; j < splitText[i].Split(" ").Length; j++)
+                            {
+                                lineLength += fonts[2].MeasureString(splitText[i].Split(" ")[j]).X;
+                                if (lineLength > textLength)
+                                    movingWords += splitText[i].Split(" ")[j] + " ";
+                                else
+                                    remainingWords += splitText[i].Split(" ")[j] + " ";
+                            }
+                            splitText[i] = remainingWords;
+                            splitText.Insert(i + 1, "2" + movingWords);
+                        }
+                return splitText;
+            }
+            return null;
         }
 
         private string checkCharacters(string text)
@@ -144,23 +130,24 @@ namespace DnDestiny
 
         public Rectangle Position(MouseState mState)
         {
-            return new Rectangle((int)(startPosition.X - (startPosition.X + mState.X) * factor.X),
-            (int)(startPosition.Y - (startPosition.Y + mState.Y) * factor.Y), startPosition.Width, startPosition.Height);
+            return new Rectangle(startPosition.X - (int)((mState.X - Game1.screenWidth / 2) * factor.X),
+            startPosition.Y - (int)((mState.Y - Game1.screenHeight / 2) * factor.Y), startPosition.Width, startPosition.Height);
         }
 
         public void DrawPopup(SpriteBatch _spriteBatch, MouseState mState)
         {
             if (Position(mState).Contains(mState.Position))
+            {
+                float textHeight = 0;
+                int columnHeight = 800;
+                int columnWidth = 500;
+                List<List<string>> columns = new List<List<string>>();
+                columns.Add(new List<string>());
+                Point textPosition = mState.Position;
+                float drawHeight = 0;
+
                 if (text != null)
                 {
-                    float textHeight = 0;
-                    int columnHeight = 800;
-                    int columnWidth = 500;
-                    List<List<string>> columns = new List<List<string>>();
-                    columns.Add(new List<string>());
-                    Point textPosition = mState.Position;
-                    float drawHeight = 0;
-
                     // calculate columns
                     for (int i = 0; i < text.Count; i++)
                     {
@@ -170,36 +157,41 @@ namespace DnDestiny
                             textHeight = Math.Max(textHeight, drawHeight);
                             drawHeight = 0;
                         }
-                        columns[columns.Count - 1].Add(text[i]);
+                        columns[columns.Count - 1].Add(text[i].Trim());
                         drawHeight += fonts[int.Parse(text[i].Substring(0, 1))].LineSpacing;
                     }
+                    textHeight = Math.Max(textHeight, drawHeight);
 
                     // remove redundant lines
                     for (int i = 0; i < columns.Count; i++)
                         for (int j = columns[i].Count - 1; j > 0; j--)
-                            if (columns[i][j].Length < 2) { textHeight -= fonts[int.Parse(columns[i][j].Substring(0, 1))].LineSpacing; columns[i].RemoveAt(j); }
+                            if (columns[i][j].Substring(columns[i][j].Length - 1).Equals("2"))
+                            { textHeight -= fonts[int.Parse(columns[i][j].Substring(0, 1))].LineSpacing; columns[i].RemoveAt(j); }
                             else { j = 0; }
-                    textHeight = Math.Max(textHeight, drawHeight);
+                }
 
-                    // move textPosition
-                    if (mState.Position.X > Game1.screenWidth / 2) { textPosition.X -= columnWidth * columns.Count; }
-                    if (mState.Position.Y > Game1.screenHeight / 2) { textPosition.Y -= (int)(textHeight / columns.Count + 100); }
-                    if (mState.Position.X > Game1.screenWidth / 2) { textPosition.X -= 15; }
-                    else { textPosition.X += 50; }
-                    if (mState.Position.Y > Game1.screenHeight / 2) { textPosition.Y -= 15; }
-                    else { textPosition.Y += 50; }
-                    textPosition.X = Math.Max(textPosition.X, 30);
-                    textPosition.Y = Math.Max(textPosition.Y, 30);
-                    textPosition.X = Math.Min(textPosition.X, Game1.screenWidth - 30 - columns.Count * columnWidth);
-                    textPosition.Y = Math.Min(textPosition.Y, Game1.screenHeight - 170 - (int)textHeight);
+                // move textPosition
+                if (mState.Position.X > Game1.screenWidth / 2) { textPosition.X -= columnWidth * columns.Count; }
+                if (mState.Position.Y > Game1.screenHeight / 2) { textPosition.Y -= (int)(textHeight / columns.Count + 100); }
+                if (mState.Position.X > Game1.screenWidth / 2) { textPosition.X -= 15; }
+                else { textPosition.X += 50; }
+                if (mState.Position.Y > Game1.screenHeight / 2) { textPosition.Y -= 15; }
+                else { textPosition.Y += 50; }
+                textPosition.X = Math.Max(textPosition.X, 30);
+                textPosition.Y = Math.Max(textPosition.Y, 30);
+                textPosition.X = Math.Min(textPosition.X, Game1.screenWidth - 30 - columns.Count * columnWidth);
+                textPosition.Y = Math.Min(textPosition.Y, Game1.screenHeight - 170 - (int)textHeight);
 
-                    // draw background title and type
-                    _spriteBatch.Draw(white, new Rectangle(textPosition.X, textPosition.Y, columnWidth * columns.Count, 6), Color.White);
-                    _spriteBatch.Draw(black, new Rectangle(textPosition.X, textPosition.Y + 6, columnWidth * columns.Count, 94), Color.White);
-                    _spriteBatch.DrawString(fonts[0], title, new Vector2(textPosition.X + 10, textPosition.Y + 16), Color.White);
-                    _spriteBatch.DrawString(fonts[1], type, new Vector2(textPosition.X + 10, textPosition.Y + 16 + fonts[0].LineSpacing), Color.White);
+                // draw background title and type
+                _spriteBatch.Draw(white, new Rectangle(textPosition.X, textPosition.Y, columnWidth * columns.Count, 6), Color.White);
+                _spriteBatch.Draw(black, new Rectangle(textPosition.X, textPosition.Y + 6, columnWidth * columns.Count, 94), Color.White);
+                _spriteBatch.DrawString(fonts[0], title, new Vector2(textPosition.X + 10, textPosition.Y + 16), Color.White);
+                _spriteBatch.DrawString(fonts[1], type, new Vector2(textPosition.X + 10, textPosition.Y + 16 + fonts[0].LineSpacing), Color.White);
+
+                if (text != null)
+                {
                     _spriteBatch.Draw(black, new Rectangle(textPosition.X, textPosition.Y + 100, columnWidth * columns.Count,
-                        (int)Math.Min(columnHeight, textHeight + 20)), Color.White * 0.8f);
+                           (int)Math.Min(columnHeight, textHeight + 20)), Color.White * 0.8f);
                     for (int i = 0; i < columns.Count; i++)
                     {
                         drawHeight = 0;
@@ -211,19 +203,13 @@ namespace DnDestiny
                         }
                     }
                 }
+            }
         }
 
         public void Draw(SpriteBatch _spriteBatch, MouseState mState)
         {
-            if (isVisible)
-                // draw button
-                if (Position(mState).Contains(mState.Position)) { _spriteBatch.Draw(activeT, Position(mState), Color.White); }
-                else { _spriteBatch.Draw(inactiveT, Position(mState), Color.White); }
-        }
-
-        public bool MouseHoversOver(MouseState mState)
-        {
-            return Position(mState).Contains(mState.Position);
+            if (Position(mState).Contains(mState.Position)) { _spriteBatch.Draw(activeT, Position(mState), Color.White); }
+            else { _spriteBatch.Draw(inactiveT, Position(mState), Color.White); }
         }
         #endregion
     }

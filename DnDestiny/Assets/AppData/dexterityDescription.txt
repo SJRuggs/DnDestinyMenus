@@ -1,7 +1,0 @@
-Dexterity is a measure of your fine motor skill. It is how quickly and how accurately you can move your body, and how prepared you are to physically react to something. You don’t have to be strong to be dextrous, and being dextrous is not always a sign of physical strength.
-
-Acrobatics$Whenever you call upon your ability to maintain your balance or use precise movements, your Architect might have you make a Dexterity (Acrobatics) check. This could be for walking a tightrope, slipping through a small opening quickly, or navigating around security lasers.
-
-Sleight of Hand$Your Architect might have you make a Dexterity (Sleight of Hand) check to determine how well you perform a card trick, pick a lock, or slip an item from someone else’s pocket. Ghosts might need to make a Dexterity (Sleight of Hand) check to transmat items.
-
-Stealth$Obscuring your presence or the presence of another person or object would call for a Dexterity (Stealth) check.

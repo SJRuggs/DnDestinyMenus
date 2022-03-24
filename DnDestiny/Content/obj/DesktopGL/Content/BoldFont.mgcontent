@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SourceFile>C:/Users/EV-02/source/repos/DnDestinyMenus/DnDestiny/Content/BoldFont.spritefont</SourceFile>
-  <SourceTime>2022-03-22T17:18:31.6981875-04:00</SourceTime>
+  <SourceTime>2022-03-23T13:58:25.3315518-04:00</SourceTime>
   <DestFile>C:/Users/EV-02/source/repos/DnDestinyMenus/DnDestiny/Content/bin/DesktopGL/Content/BoldFont.xnb</DestFile>
-  <DestTime>2022-03-22T17:18:32.5617021-04:00</DestTime>
+  <DestTime>2022-03-23T13:58:26.0185417-04:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
   <ImporterTime>2020-08-10T12:17:54-04:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>

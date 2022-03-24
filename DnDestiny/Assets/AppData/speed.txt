@@ -1,0 +1,7 @@
+On your turn, you can move a distance up to your speed. You can use as much or as little of your speed as you like on your turn, following the rules here.
+
+Your movement can include jumping, climbing, and swimming. These different modes of movement can be combined with walking, or they can constitute your entire move.
+
+Being Prone$Combatants often find themselves lying on the ground, either because they are knocked down or because they throw themselves down. You can drop prone without using any of your speed, or spend half of your movement to become combat prone. While prone or combat-prone, you can spend half of your movement to stand up.
+
+It costs no movement for a Combat-Prone creature to begin Aiming with a firearm that has a medium or long range band. Comabt-Prone creatures have disadvantage on attack rolls they make with melee weapons, close-range firearms, or ranged weapons that do not have a medium or long range band. Attack rolls against the creature have disadvantage if the attacker is not Aiming, or if the attacker is not within 5 feet of the creature. If the attacker is within 5 feet of the creature, the attacker has advantage on its attack roll.

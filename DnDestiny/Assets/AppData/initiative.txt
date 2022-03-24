@@ -1,0 +1,1 @@
+Initiative determines the order of turns during a combat. When combat starts, every participant makes a Dexterity check to determine their place in the initiative order.

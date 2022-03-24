@@ -1,0 +1,1 @@
+Attempting to detect the Light affinity of a creature, identifying artifacts, or interacting with Hive spells all might call for an Intelligence (Arcana) check.

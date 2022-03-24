@@ -1,9 +1,0 @@
-Charisma is your force of self, how strongly and how effectively you can interact with others, and how you exert your presence on the world.
-
-Deception$Remaining inconspicuous in a crowd, lying to your superior officer, or trying to convince someone that hugging a cursed thrall is a good idea would all be appropriate situations for a Charisma (Deception) check.
-
-Intimidation$A Charisma (Intimidation) check can be used to scare someone into giving up information or acting on your behalf, or otherwise using fear to affect someone’s decision.
-
-Performance$Your Architect might call for a Charisma (Performance) check to determine how well you play an instrument, act in a movie, or tell a story to a crowd.
-
-Persuasion$If you are trying to convince someone to see things your way, your Architect might call for a Charisma (Persuasion) check. Typically Persuasion isn’t used to convince someone of something untrue, but to bring someone into agreement with something you actually believe yourself. 

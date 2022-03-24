@@ -1,3 +1,3 @@
 Strength is a measure of your physical aptitude, or the physical power of your body. A high Strength means you can lift more, run longer, and jump higher. You can also use your Strength to break objects or resist force being exerted on you.
 
-Athletics$Jumping over an obstacle, running long distances, or forcing open a rusted door might all call for a Strength (Athletics) check. 
+Skills$$Athletics
