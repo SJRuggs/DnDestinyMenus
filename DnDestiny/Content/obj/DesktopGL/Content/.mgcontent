@@ -4,11 +4,11 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/EV-02/source/repos/DnDestinyMenus/DnDestiny/Content/BoldFont.spritefont</File>
-    <File>C:/Users/EV-02/source/repos/DnDestinyMenus/DnDestiny/Content/DefaultFont.spritefont</File>
-    <File>C:/Users/EV-02/source/repos/DnDestinyMenus/DnDestiny/Content/ExtraLargeFont.spritefont</File>
-    <File>C:/Users/EV-02/source/repos/DnDestinyMenus/DnDestiny/Content/SmallFont.spritefont</File>
-    <File>C:/Users/EV-02/source/repos/DnDestinyMenus/DnDestiny/Content/TitleFont.spritefont</File>
+    <File>C:/Users/sjrug/Source/Repos/DnDestinyMenus/DnDestiny/Content/BoldFont.spritefont</File>
+    <File>C:/Users/sjrug/Source/Repos/DnDestinyMenus/DnDestiny/Content/DefaultFont.spritefont</File>
+    <File>C:/Users/sjrug/Source/Repos/DnDestinyMenus/DnDestiny/Content/ExtraLargeFont.spritefont</File>
+    <File>C:/Users/sjrug/Source/Repos/DnDestinyMenus/DnDestiny/Content/SmallFont.spritefont</File>
+    <File>C:/Users/sjrug/Source/Repos/DnDestinyMenus/DnDestiny/Content/TitleFont.spritefont</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

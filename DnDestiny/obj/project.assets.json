@@ -174,19 +174,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\EV-02\\.nuget\\packages\\": {}
+    "C:\\Users\\sjrug\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\EV-02\\source\\repos\\DnDestinyMenus\\DnDestiny\\DnDestiny.csproj",
+      "projectUniqueName": "C:\\Users\\sjrug\\Source\\Repos\\DnDestinyMenus\\DnDestiny\\DnDestiny.csproj",
       "projectName": "DnDestiny",
-      "projectPath": "C:\\Users\\EV-02\\source\\repos\\DnDestinyMenus\\DnDestiny\\DnDestiny.csproj",
-      "packagesPath": "C:\\Users\\EV-02\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\EV-02\\source\\repos\\DnDestinyMenus\\DnDestiny\\obj\\",
+      "projectPath": "C:\\Users\\sjrug\\Source\\Repos\\DnDestinyMenus\\DnDestiny\\DnDestiny.csproj",
+      "packagesPath": "C:\\Users\\sjrug\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\sjrug\\Source\\Repos\\DnDestinyMenus\\DnDestiny\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\EV-02\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\sjrug\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -236,7 +236,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.404\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.405\\RuntimeIdentifierGraph.json"
       }
     }
   }

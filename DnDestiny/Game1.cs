@@ -15,14 +15,6 @@ namespace DnDestiny
         levelUp
     }
 
-    public enum cataState
-    {
-        abilities,
-        features,
-        gear,
-        ghost
-    }
-
     public class Game1 : Game
     {
         #region Fields
@@ -76,6 +68,11 @@ namespace DnDestiny
         private MouseState prevMState;
         private KeyboardState kbState;
         private KeyboardState prevKbState;
+        #endregion
+
+        #region Catagories
+        private string[] catagoryNames;
+        private Field[] catagoryButtons;
         #endregion
 
         #endregion
@@ -134,7 +131,6 @@ namespace DnDestiny
             characters = new List<Character>();
             editableStrings = new List<EditableString>();
             editableFields = new List<EditableField>();
-            cataState cataState = cataState.abilities;
             while (text != null)
             {
                 characters.Add(new Character(text));
@@ -191,7 +187,17 @@ namespace DnDestiny
             skillNames.Add("Technology");
             skillScores.Add(3);
 
+            #region Catagories
+            catagoryNames = new string[4];
+            catagoryNames[0] = "Abilities";
+            catagoryNames[1] = "Features and Traits";
+            catagoryNames[2] = "Gear";
+            catagoryNames[3] = "Ghost Features";
+            catagoryButtons = new Field[4];
+            #endregion
+
             LoadCharacter(currentChar);
+
             #endregion
 
             base.Initialize();
@@ -279,6 +285,10 @@ namespace DnDestiny
                 editableStrings[i].Draw(_spriteBatch, mState);
             for (int i = 0; i < editableFields.Count; i++)
                 editableFields[i].Draw(_spriteBatch, mState);
+            for (int i = 0; i < catagoryButtons.Length; i++)
+                catagoryButtons[i].Draw(_spriteBatch, mState);
+
+
             for (int i = 0; i < sheetFields.Count; i++)
                 sheetFields[i].DrawPopup(_spriteBatch, mState);
             #endregion
@@ -706,6 +716,18 @@ namespace DnDestiny
             img = new FileStream("../../../Assets/AppImages/RTLcircle inactive.png", FileMode.Open, FileAccess.Read);
             for (int i = 0; i < 6; i++)
                 editableFields[i].InactiveT = Texture2D.FromStream(GraphicsDevice, img);
+            #endregion
+
+            #region Catagory Buttons
+            for (int i = 0; i < 4; i++)
+            {
+                catagoryButtons[i] = new Field(factor, defaultFont, boldFont, titleFont, panelPixelWhite, panelPixelBlack,
+                    catagoryNames[i], "Grenade, Melee, Super, and Superclass Abilities.", null, new Rectangle(1150 + 150 * i, 100, 100, 100));
+                img = new FileStream(string.Format("../../../Assets/AppImages/{0} active.png", catagoryNames[i]), FileMode.Open, FileAccess.Read);
+                catagoryButtons[i].ActiveT = Texture2D.FromStream(GraphicsDevice, img);
+                img = new FileStream(string.Format("../../../Assets/AppImages/{0} inactive.png", catagoryNames[i]), FileMode.Open, FileAccess.Read);
+                catagoryButtons[i].InactiveT = Texture2D.FromStream(GraphicsDevice, img);
+            }
             #endregion
 
             #endregion

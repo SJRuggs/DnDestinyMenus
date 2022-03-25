@@ -4,11 +4,17 @@ using System.Text;
 
 namespace DnDestiny
 {
+    public enum cataState
+    {
+        abilities,
+        features,
+        gear,
+        ghost
+    }
+
     class Character
     {
         #region Fields
-        Random rng;
-
         private string name;
         private string clas;
         private int level;
@@ -24,19 +30,22 @@ namespace DnDestiny
         private int speed;
         private int glimmer;
         private int initiative;
+
+        // catagories
+        private cataState cCatagory;
         #endregion
 
         #region Constructors
         public Character(string name)
         {
             this.name = name;
-            rng = new Random();
             initiative = 0;
             stats = new int[6];
             saves = new bool[6];
             profs = new bool[19];
             experts = new bool[19];
             otherProfs = new List<string>();
+            cCatagory = cataState.abilities;
         }
         #endregion
 
