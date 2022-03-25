@@ -1,0 +1,4 @@
+In order to recover health points, you need to benefit from a source that allows you to specifically recover health points. When you have the option to recover hit points, the amount you can recover is applied to your health first, and then any remaining amount can be applied to your energy shields.
+Dropping to 0 health points$If damage reduces you to 0 or fewer health points, you die. This death ends if your Ghost ressurects you.
+
+Instant Death$While Risen creatures can, and often do, take an amount of damage that would cause them to instantly die under normal adventuring standards, immediate death does not mean the Risen creature is gone forever. Even if all that remains is a smear on the wall or a pile of ash on the ground, the only way a Risen creature can truly be gone forever is if their Ghost cannot resurrect them. This can happen if the Ghost is killed, or if the Risen creature fails their RTL saving throws.

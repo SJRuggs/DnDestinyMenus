@@ -26,3 +26,4 @@ C:\Users\EV-02\source\repos\DnDestinyMenus\DnDestiny\bin\Debug\netcoreapp3.1\Con
 C:\Users\EV-02\source\repos\DnDestinyMenus\DnDestiny\bin\Debug\netcoreapp3.1\Content\SmallFont.xnb
 C:\Users\EV-02\source\repos\DnDestinyMenus\DnDestiny\bin\Debug\netcoreapp3.1\Content\TitleFont.xnb
 C:\Users\EV-02\source\repos\DnDestinyMenus\DnDestiny\obj\Debug\netcoreapp3.1\DnDestiny.csproj.AssemblyReference.cache
+C:\Users\EV-02\source\repos\DnDestinyMenus\DnDestiny\bin\Debug\netcoreapp3.1\Content\ExtraLargeFont.xnb

@@ -83,14 +83,18 @@ namespace DnDestiny
                 string movingWords;
                 for (int i = 0; i < text.Count; i++)
                     if (text[i].Contains("$$"))
-                    {
-                        splitText.Add("0" + checkCharacters(text[i]).Split("$$")[0].Trim().ToUpper());
-                        splitText.Add("2" + checkCharacters(text[i]).Split("$$")[1].Trim());
+                    { 
+                        if (!checkCharacters(text[i]).Split("$$")[0].Trim().ToUpper().Equals(""))
+                            splitText.Add("0" + checkCharacters(text[i]).Split("$$")[0].Trim().ToUpper());
+                        if (!checkCharacters(text[i]).Split("$$")[1].Trim().Equals(""))
+                            splitText.Add("2" + checkCharacters(text[i]).Split("$$")[1].Trim());
                     }
                     else if (text[i].Contains('$'))
                     {
-                        splitText.Add("1" + checkCharacters(text[i]).Split('$')[0].Trim().ToUpper());
-                        splitText.Add("2" + checkCharacters(text[i]).Split('$')[1].Trim());
+                        if (!checkCharacters(text[i]).Split("$")[0].Trim().ToUpper().Equals(""))
+                            splitText.Add("1" + checkCharacters(text[i]).Split('$')[0].Trim().ToUpper());
+                        if (!checkCharacters(text[i]).Split("$")[1].Trim().Equals(""))
+                            splitText.Add("2" + checkCharacters(text[i]).Split('$')[1].Trim());
                     }
                     else
                     { splitText.Add("2" + checkCharacters(text[i]).Trim()); }
@@ -164,10 +168,19 @@ namespace DnDestiny
 
                     // remove redundant lines
                     for (int i = 0; i < columns.Count; i++)
+                    {
                         for (int j = columns[i].Count - 1; j > 0; j--)
                             if (columns[i][j].Substring(columns[i][j].Length - 1).Equals("2"))
                             { textHeight -= fonts[int.Parse(columns[i][j].Substring(0, 1))].LineSpacing; columns[i].RemoveAt(j); }
                             else { j = 0; }
+                        for (int j = 0; j < columns[i].Count - 1; j++)
+                            if (columns[i][j].Equals("2") && columns[i][j + 1].Equals("2")) 
+                            { textHeight -= fonts[2].LineSpacing; columns[i].RemoveAt(j); }
+                        for (int j = 0; j < columns[i].Count; j++)
+                            if(columns[i][j].Length > 1)
+                                if (columns[i][j][1].Equals(" "))
+                                    columns[i][j] = columns[i][j].Substring(0, 1) + columns[i][j].Substring(2);
+                    }
                 }
 
                 // move textPosition
@@ -183,14 +196,14 @@ namespace DnDestiny
                 textPosition.Y = Math.Min(textPosition.Y, Game1.screenHeight - 170 - (int)textHeight);
 
                 // draw background title and type
-                _spriteBatch.Draw(white, new Rectangle(textPosition.X, textPosition.Y, columnWidth * columns.Count, 6), Color.White);
-                _spriteBatch.Draw(black, new Rectangle(textPosition.X, textPosition.Y + 6, columnWidth * columns.Count, 94), Color.White);
+                _spriteBatch.Draw(white, new Rectangle(textPosition.X, textPosition.Y, columnWidth * columns.Count + 5, 6), Color.White);
+                _spriteBatch.Draw(black, new Rectangle(textPosition.X, textPosition.Y + 6, columnWidth * columns.Count + 5, 94), Color.White);
                 _spriteBatch.DrawString(fonts[0], title, new Vector2(textPosition.X + 10, textPosition.Y + 16), Color.White);
                 _spriteBatch.DrawString(fonts[1], type, new Vector2(textPosition.X + 10, textPosition.Y + 16 + fonts[0].LineSpacing), Color.White);
 
                 if (text != null)
                 {
-                    _spriteBatch.Draw(black, new Rectangle(textPosition.X, textPosition.Y + 100, columnWidth * columns.Count,
+                    _spriteBatch.Draw(black, new Rectangle(textPosition.X, textPosition.Y + 100, columnWidth * columns.Count + 5,
                            (int)Math.Min(columnHeight, textHeight + 20)), Color.White * 0.8f);
                     for (int i = 0; i < columns.Count; i++)
                     {
@@ -208,7 +221,7 @@ namespace DnDestiny
 
         public void Draw(SpriteBatch _spriteBatch, MouseState mState)
         {
-            if (Position(mState).Contains(mState.Position)) { _spriteBatch.Draw(activeT, Position(mState), Color.White); }
+            if (Position(mState).Contains(mState.Position) || isActive) { _spriteBatch.Draw(activeT, Position(mState), Color.White); }
             else { _spriteBatch.Draw(inactiveT, Position(mState), Color.White); }
         }
         #endregion

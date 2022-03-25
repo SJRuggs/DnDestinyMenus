@@ -1,0 +1,5 @@
+Hit Dice are a reservoir of natural healing all creatures have.
+
+In order to use Hit Dice, you need to take a rest, specifically a Short Rest. This allows you to expend and roll as many Hit Dice as you want from available pool, adding your Constitution Modifier to the result in order to heal. The size of your pool is equal to your character level, for example, a 5th level Gunslinger will have a maximum of five Hit Dice (in this case, d8s).
+
+Regaining Hit Dice$When you finish a long rest, you regain a number of Hit Dice up to half of your maximum number of Hit Dice (rounded down).

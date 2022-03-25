@@ -1,3 +1,3 @@
-Characters have a proficiency bonus determined by level. Your proficiency bonus can't be added to a single die roll or other numbers more than once. For example, if two different rules say you can add your proficiency bonus to a Wisdom saving throw, you nevertheless add the bonus only once when you make the save.
+Characters have a proficiency bonus determined by level. For an attack roll, saving throw, or skill check that you are proficient in, add your proficiency bonus to the result once. Your character is proficient in the following weapons, armor, and equipment, in addition to the saving throw and skill proficiencies granted by your class.
 
-Occasionally, your proficiency bonus might be multiplied or divided before you apply it. If a circumstance suggests that your proficiency bonus applies more than once to the same roll, you still add it only once and multiply or divide it only once. By the same token, if a feature or effect allows you to multiply your proficiency bonus when making an ability check that wouldn't normally benefit from your proficiency bonus, you still don't add the bonus to the check.
+Proficiencies$$

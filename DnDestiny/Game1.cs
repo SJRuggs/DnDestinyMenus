@@ -15,6 +15,14 @@ namespace DnDestiny
         levelUp
     }
 
+    public enum cataState
+    {
+        abilities,
+        features,
+        gear,
+        ghost
+    }
+
     public class Game1 : Game
     {
         #region Fields
@@ -35,6 +43,7 @@ namespace DnDestiny
         private Texture2D panelPixelBlack;
 
         // fonts
+        private SpriteFont extraLargeFont;
         private SpriteFont titleFont;
         private SpriteFont boldFont;
         private SpriteFont defaultFont;
@@ -46,6 +55,7 @@ namespace DnDestiny
         Character currentChar;
         List<Field> sheetFields;
         List<StringField> sheetStrings;
+        List<EditableString> editableStrings;
         List<EditableField> editableFields;
         string text;
         List<string> skillNames;
@@ -107,6 +117,7 @@ namespace DnDestiny
             expert = Texture2D.FromStream(GraphicsDevice, img);
 
             // fonts
+            extraLargeFont = Content.Load<SpriteFont>("ExtraLargeFont");
             titleFont = Content.Load<SpriteFont>("TitleFont");
             boldFont = Content.Load<SpriteFont>("BoldFont");
             defaultFont = Content.Load<SpriteFont>("DefaultFont");
@@ -121,7 +132,9 @@ namespace DnDestiny
             sheetFields = new List<Field>();
             sheetStrings = new List<StringField>();
             characters = new List<Character>();
+            editableStrings = new List<EditableString>();
             editableFields = new List<EditableField>();
+            cataState cataState = cataState.abilities;
             while (text != null)
             {
                 characters.Add(new Character(text));
@@ -197,8 +210,53 @@ namespace DnDestiny
             kbState = Keyboard.GetState();
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            for (int i = 0; i < editableFields.Count; i++)
-                editableFields[i].CalcInput(mState, prevMState, kbState, prevKbState);
+
+            #region Editable Strings
+            for (int i = 0; i < 4; i++)
+                editableStrings[i].CalcInput(mState, prevMState, kbState, prevKbState);
+            if (editableStrings[0].Toggle)
+            { 
+                if (mState.LeftButton == ButtonState.Pressed && prevMState.LeftButton == ButtonState.Released && !sheetFields[31].Position(mState).Contains(mState.Position))
+                {
+                    editableStrings[0].Toggle = false;
+                    sheetFields[31].IsActive = false;
+                }
+                else { sheetFields[31].IsActive = true; }
+            } 
+            if (editableStrings[1].Toggle)
+            {
+                if (mState.LeftButton == ButtonState.Pressed && prevMState.LeftButton == ButtonState.Released && !sheetFields[36].Position(mState).Contains(mState.Position))
+                {
+                    editableStrings[1].Toggle = false;
+                    sheetFields[36].IsActive = false;
+                }
+                else { sheetFields[36].IsActive = true; }
+            }
+            if (editableStrings[2].Toggle)
+            {
+                if (mState.LeftButton == ButtonState.Pressed && prevMState.LeftButton == ButtonState.Released && !sheetFields[37].Position(mState).Contains(mState.Position))
+                {
+                    editableStrings[2].Toggle = false;
+                    sheetFields[37].IsActive = false;
+                }
+                else { sheetFields[37].IsActive = true; }
+            }
+            if (editableStrings[3].Toggle)
+            {
+                if (mState.LeftButton == ButtonState.Pressed && prevMState.LeftButton == ButtonState.Released && !sheetFields[38].Position(mState).Contains(mState.Position))
+                {
+                    editableStrings[3].Toggle = false;
+                    sheetFields[38].IsActive = false;
+                }
+                else { sheetFields[38].IsActive = true; }
+            }
+            if (editableStrings[1].Value.Length == 0) { editableStrings[1].Value = "0"; }
+            if (editableStrings[2].Value.Length == 0) { editableStrings[2].Value = "0"; }
+            #endregion
+
+            #region Editable Fields
+            foreach (EditableField field in editableFields) field.DetectToggle(mState, prevMState);
+            #endregion
 
             prevKbState = kbState;
             prevMState = mState;
@@ -217,10 +275,12 @@ namespace DnDestiny
             for (int i = 0; i < sheetStrings.Count; i++)
                 sheetStrings[i].Draw(_spriteBatch, mState);
             DrawProfs(currentChar);
-            for (int i = 0; i < sheetFields.Count; i++)
-                sheetFields[i].DrawPopup(_spriteBatch, mState);
+            for (int i = 0; i < editableStrings.Count; i++)
+                editableStrings[i].Draw(_spriteBatch, mState);
             for (int i = 0; i < editableFields.Count; i++)
                 editableFields[i].Draw(_spriteBatch, mState);
+            for (int i = 0; i < sheetFields.Count; i++)
+                sheetFields[i].DrawPopup(_spriteBatch, mState);
             #endregion
 
             // draw cursor over mouse
@@ -240,11 +300,15 @@ namespace DnDestiny
             cha.Level = int.Parse(chaReader.ReadLine());
             cha.Foundation = chaReader.ReadLine();
             cha.Race = chaReader.ReadLine();
-            for (int i = 0; i < 6; i++) cha.Stats[i] = int.Parse(chaReader.ReadLine());
-            for (int i = 0; i < 6; i++) cha.Saves[i] = bool.Parse(chaReader.ReadLine());
-            for (int i = 0; i < 19; i++) cha.Profs[i] = bool.Parse(chaReader.ReadLine());
-            for (int i = 0; i < 19; i++) cha.Experts[i] = bool.Parse(chaReader.ReadLine());
-            cha.OtherProfs = chaReader.ReadLine().Split('$').ToList();
+            string[] temp = chaReader.ReadLine().Split('.');
+            for (int i = 0; i < 6; i++) cha.Stats[i] = int.Parse(temp[i]);
+            temp = chaReader.ReadLine().Split('.');
+            for (int i = 0; i < 6; i++) cha.Saves[i] = bool.Parse(temp[i]);
+            temp = chaReader.ReadLine().Split('.');
+            for (int i = 0; i < 19; i++) cha.Profs[i] = bool.Parse(temp[i]);
+            temp = chaReader.ReadLine().Split('.');
+            for (int i = 0; i < 19; i++) cha.Experts[i] = bool.Parse(temp[i]);
+            cha.OtherProfs = chaReader.ReadLine().Split('.').ToList();
             cha.EquippedArmor = chaReader.ReadLine();
             cha.Speed = int.Parse(chaReader.ReadLine());
             cha.Glimmer = int.Parse(chaReader.ReadLine());
@@ -287,14 +351,14 @@ namespace DnDestiny
                 // bonus
                 if ((cha.Stats[i] - 10) / 2 > -1)
                 {
-                    sheetStrings.Add(new StringField(factor, titleFont, "(+" + ((cha.Stats[i] - 10) / 2) + ")", new Vector2(
-                        sheetFields[i].StartPosition.X + sheetFields[i].StartPosition.Width / 2 - titleFont.MeasureString("(+" + ((cha.Stats[i] - 10) / 2) + ")").X / 2,
+                    sheetStrings.Add(new StringField(factor, boldFont, "(+" + ((cha.Stats[i] - 10) / 2) + ")", new Vector2(
+                        sheetFields[i].StartPosition.X + sheetFields[i].StartPosition.Width / 2 - boldFont.MeasureString("(+" + ((cha.Stats[i] - 10) / 2) + ")").X / 2,
                         sheetFields[i].StartPosition.Y + sheetFields[i].StartPosition.Height / 2)));
                 }
                 else
                 {
-                    sheetStrings.Add(new StringField(factor, titleFont, "(" + ((cha.Stats[i] - 10) / 2) + ")", new Vector2(
-                        sheetFields[i].StartPosition.X + sheetFields[i].StartPosition.Width / 2 - titleFont.MeasureString("(" + ((cha.Stats[i] - 10) / 2) + ")").X / 2,
+                    sheetStrings.Add(new StringField(factor, boldFont, "(" + ((cha.Stats[i] - 10) / 2) + ")", new Vector2(
+                        sheetFields[i].StartPosition.X + sheetFields[i].StartPosition.Width / 2 - boldFont.MeasureString("(" + ((cha.Stats[i] - 10) / 2) + ")").X / 2,
                         sheetFields[i].StartPosition.Y + sheetFields[i].StartPosition.Height / 2)));
                 }
             }
@@ -335,13 +399,13 @@ namespace DnDestiny
             int stat;
             for (int i = 0; i < 6; i++)
             {
-                if ((cha.Stats[i] - 10) / 2 > -1 && (!cha.Saves[i] || (cha.Stats[i] - 10 + cha.ProfBonus) / 2 > -1))
-                    sheetStrings.Add(new StringField(factor, boldFont, "+", new Vector2(sheetFields[i + 6].StartPosition.X + 40, sheetFields[i + 6].StartPosition.Y + 3)));
-                else
-                    sheetStrings.Add(new StringField(factor, boldFont, "-", new Vector2(sheetFields[i + 6].StartPosition.X + 40, sheetFields[i + 6].StartPosition.Y + 3)));
                 stat = (cha.Stats[i] - 10) / 2;
                 if (cha.Saves[i]) stat += cha.ProfBonus;
-                sheetStrings[sheetStrings.Count - 1].Text = sheetStrings[sheetStrings.Count - 1].Text + Math.Abs(stat);
+                if (stat > -1)
+                    sheetStrings.Add(new StringField(factor, boldFont, "+" + stat, new Vector2(sheetFields[i + 6].StartPosition.X + 40, sheetFields[i + 6].StartPosition.Y + 3)));
+                else
+                    sheetStrings.Add(new StringField(factor, boldFont, stat.ToString(), new Vector2(sheetFields[i + 6].StartPosition.X + 40, sheetFields[i + 6].StartPosition.Y + 3)));
+                
             }
 
             sheetStrings.Add(new StringField(factor, smallFont, "SAVING THROWS", new Vector2(
@@ -373,14 +437,13 @@ namespace DnDestiny
                 sheetFields[sheetFields.Count - 1].ActiveT = Texture2D.FromStream(GraphicsDevice, img);
                 sheetFields[sheetFields.Count - 1].InactiveT = Texture2D.FromStream(GraphicsDevice, img);
                 sheetStrings.Add(new StringField(factor, boldFont, "        " + skillNames[i], new Vector2(sheetFields[12 + i].StartPosition.X + 40, sheetFields[12 + i].StartPosition.Y + 3)));
-                if ((cha.Stats[skillScores[i]] - 10) / 2 > -1 && (!cha.Profs[0] || (cha.Stats[skillScores[i]] - 10 + cha.ProfBonus) / 2 > -1))
-                    sheetStrings.Add(new StringField(factor, boldFont, "+", new Vector2(sheetFields[12 + i].StartPosition.X + 40, sheetFields[12 + i].StartPosition.Y + 3)));
-                else
-                    sheetStrings.Add(new StringField(factor, boldFont, "-", new Vector2(sheetFields[12 + i].StartPosition.X + 40, sheetFields[12 + i].StartPosition.Y + 3)));
                 stat = (cha.Stats[skillScores[i]] - 10) / 2;
                 if (cha.Profs[i]) stat += cha.ProfBonus;
                 if (cha.Experts[i]) stat += cha.ProfBonus;
-                sheetStrings[sheetStrings.Count - 1].Text = sheetStrings[sheetStrings.Count - 1].Text + Math.Abs(stat);
+                if (stat > -1)
+                    sheetStrings.Add(new StringField(factor, boldFont, "+" + stat, new Vector2(sheetFields[i + 12].StartPosition.X + 40, sheetFields[i + 12].StartPosition.Y + 3)));
+                else
+                    sheetStrings.Add(new StringField(factor, boldFont, stat.ToString(), new Vector2(sheetFields[i + 12].StartPosition.X + 40, sheetFields[i + 12].StartPosition.Y + 3)));
             }
             sheetStrings.Add(new StringField(factor, smallFont, "SKILLS", new Vector2(
                 sheetFields[sheetFields.Count - 1].StartPosition.X + sheetFields[sheetFields.Count - 1].StartPosition.Width / 2 -
@@ -392,7 +455,7 @@ namespace DnDestiny
             text = string.Format("Level {0} {1} {2}", cha.Level, cha.Race, cha.Class);
             if (cha.Foundation != null) { text = text + ", " + cha.Foundation; }
             sheetFields.Add(new Field(factor, defaultFont, boldFont, titleFont, panelPixelWhite, panelPixelBlack,
-                    cha.Name, text, null, new Rectangle(600, 100, 500, 100)));
+                    "CHARACTER NAME", text, null, new Rectangle(600, 100, 500, 100)));
             img = new FileStream(string.Format("../../../Assets/AppImages/namePlate active.png"), FileMode.Open, FileAccess.Read);
             sheetFields[sheetFields.Count - 1].ActiveT = Texture2D.FromStream(GraphicsDevice, img);
             img = new FileStream(string.Format("../../../Assets/AppImages/namePlate inactive.png"), FileMode.Open, FileAccess.Read);
@@ -401,11 +464,7 @@ namespace DnDestiny
                     sheetFields[sheetFields.Count - 1].StartPosition.X + sheetFields[sheetFields.Count - 1].StartPosition.Width / 2 - 
                     smallFont.MeasureString("CHARACTER NAME").X / 2,
                     sheetFields[sheetFields.Count - 1].StartPosition.Y + sheetFields[sheetFields.Count - 1].StartPosition.Height + 10)));
-            sheetStrings.Add(new StringField(factor, titleFont, cha.Name, new Vector2(
-                    sheetFields[sheetFields.Count - 1].StartPosition.X + sheetFields[sheetFields.Count - 1].StartPosition.Width / 2
-                    - titleFont.MeasureString(cha.Name).X / 2,
-                    sheetFields[sheetFields.Count - 1].StartPosition.Y + sheetFields[sheetFields.Count - 1].StartPosition.Height / 2
-                    - titleFont.MeasureString(cha.Name).Y / 2)));
+            editableStrings.Add(new EditableString(factor, titleFont, new Rectangle(600, 100, 500, 100), cha.Name));
             #endregion
 
             #region Proficiency Bonus
@@ -417,6 +476,9 @@ namespace DnDestiny
                 readStrings.Add(text);
                 text = txt.ReadLine();
             }
+            text = "";
+            for (int i = 0; i < cha.OtherProfs.Count; i++) { text = text + cha.OtherProfs[i]; if (i != cha.OtherProfs.Count - 1) { text = text + ", "; } }
+            readStrings.Add(text);
             sheetFields.Add(new Field(factor, defaultFont, boldFont, titleFont, panelPixelWhite, panelPixelBlack, "PROFICIENCY", "Character Attribute",
                 readStrings, new Rectangle(600, 250, 100, 100)));
             img = new FileStream("../../../Assets/AppImages/proficiencyBonus active.png", FileMode.Open, FileAccess.Read);
@@ -526,7 +588,7 @@ namespace DnDestiny
                 text = txt.ReadLine();
             }
             sheetFields.Add(new Field(factor, defaultFont, boldFont, titleFont, panelPixelWhite, panelPixelBlack, "SHIELD POINTS", "Character Attribute",
-                readStrings, new Rectangle(600, 400, 233, 233)));
+                readStrings, new Rectangle(600, 434, 233, 233)));
             img = new FileStream("../../../Assets/AppImages/SP active.png", FileMode.Open, FileAccess.Read);
             sheetFields[sheetFields.Count - 1].ActiveT = Texture2D.FromStream(GraphicsDevice, img);
             img = new FileStream("../../../Assets/AppImages/SP inactive.png", FileMode.Open, FileAccess.Read);
@@ -539,11 +601,111 @@ namespace DnDestiny
 
             // max
             currentShields = cha.MaxShield;
-            sheetStrings.Add(new StringField(factor, defaultFont, "Max Shield Points: " + currentShields, new Vector2(sheetFields[sheetFields.Count - 1].StartPosition.X +
-                sheetFields[sheetFields.Count - 1].StartPosition.Width / 2 - defaultFont.MeasureString("Max Shield Points: " + currentShields).X / 2, 405)));
+            sheetStrings.Add(new StringField(factor, smallFont, "MAX SHIELD POINTS: " + currentShields, new Vector2(sheetFields[sheetFields.Count - 1].StartPosition.X +
+                sheetFields[sheetFields.Count - 1].StartPosition.Width / 2 - smallFont.MeasureString("MAX SHIELD POINTS: " + currentShields).X / 2, 464)));
 
             // current
-            editableFields.Add(new EditableField(factor, titleFont, new Rectangle(600, 400, 233, 233), cha.MaxShield.ToString()));
+            editableStrings.Add(new EditableString(factor, extraLargeFont, new Rectangle(600, 434, 233, 233), cha.MaxShield.ToString()));
+            #endregion
+
+            #region HP
+            txt = new StreamReader("../../../Assets/AppData/HP.txt");
+            text = txt.ReadLine();
+            readStrings.Clear();
+            while (text != null)
+            {
+                readStrings.Add(text);
+                text = txt.ReadLine();
+            }
+            sheetFields.Add(new Field(factor, defaultFont, boldFont, titleFont, panelPixelWhite, panelPixelBlack, "HEALTH POINTS", "Character Attribute",
+                readStrings, new Rectangle(867, 434, 233, 233)));
+            img = new FileStream("../../../Assets/AppImages/HP active.png", FileMode.Open, FileAccess.Read);
+            sheetFields[sheetFields.Count - 1].ActiveT = Texture2D.FromStream(GraphicsDevice, img);
+            img = new FileStream("../../../Assets/AppImages/HP inactive.png", FileMode.Open, FileAccess.Read);
+            sheetFields[sheetFields.Count - 1].InactiveT = Texture2D.FromStream(GraphicsDevice, img);
+
+            // label
+            sheetStrings.Add(new StringField(factor, smallFont, sheetFields[sheetFields.Count - 1].Title, new Vector2(
+                sheetFields[sheetFields.Count - 1].StartPosition.X + sheetFields[sheetFields.Count - 1].StartPosition.Width / 2 - smallFont.MeasureString(sheetFields[sheetFields.Count - 1].Title).X / 2,
+                sheetFields[sheetFields.Count - 1].StartPosition.Y + sheetFields[sheetFields.Count - 1].StartPosition.Height + 10)));
+
+            // max
+            currentHealth = cha.MaxHP;
+            sheetStrings.Add(new StringField(factor, smallFont, "MAX HEALTH POINTS: " + currentHealth, new Vector2(sheetFields[sheetFields.Count - 1].StartPosition.X +
+                sheetFields[sheetFields.Count - 1].StartPosition.Width / 2 - smallFont.MeasureString("MAX HEALTH POINTS: " + currentHealth).X / 2, 464)));
+
+            // current
+            editableStrings.Add(new EditableString(factor, extraLargeFont, new Rectangle(867, 434, 233, 233), cha.MaxHP.ToString()));
+            #endregion
+
+            #region Hit Die
+            txt = new StreamReader("../../../Assets/AppData/hitDie.txt");
+            text = txt.ReadLine();
+            readStrings.Clear();
+            while (text != null)
+            {
+                readStrings.Add(text);
+                text = txt.ReadLine();
+            }
+            sheetFields.Add(new Field(factor, defaultFont, boldFont, titleFont, panelPixelWhite, panelPixelBlack, "HIT DICE", "Character Attribute",
+                readStrings, new Rectangle(600, 718, 233, 233)));
+            img = new FileStream("../../../Assets/AppImages/hitDie active.png", FileMode.Open, FileAccess.Read);
+            sheetFields[sheetFields.Count - 1].ActiveT = Texture2D.FromStream(GraphicsDevice, img);
+            img = new FileStream("../../../Assets/AppImages/hitDie inactive.png", FileMode.Open, FileAccess.Read);
+            sheetFields[sheetFields.Count - 1].InactiveT = Texture2D.FromStream(GraphicsDevice, img);
+
+            // label
+            sheetStrings.Add(new StringField(factor, smallFont, sheetFields[sheetFields.Count - 1].Title, new Vector2(
+                sheetFields[sheetFields.Count - 1].StartPosition.X + sheetFields[sheetFields.Count - 1].StartPosition.Width / 2 - smallFont.MeasureString(sheetFields[sheetFields.Count - 1].Title).X / 2,
+                sheetFields[sheetFields.Count - 1].StartPosition.Y + sheetFields[sheetFields.Count - 1].StartPosition.Height + 10)));
+
+            // max
+            currentShields = cha.MaxShield;
+            sheetStrings.Add(new StringField(factor, smallFont, "MAX HIT DICE: " + cha.Level + "d" + cha.HitDie, new Vector2(sheetFields[sheetFields.Count - 1].StartPosition.X +
+                sheetFields[sheetFields.Count - 1].StartPosition.Width / 2 - smallFont.MeasureString("MAX HIT DICE: " + cha.Level + "d" + cha.HitDie).X / 2, 748)));
+
+            // current
+            editableStrings.Add(new EditableString(factor, extraLargeFont, new Rectangle(600, 718, 233, 233), cha.Level + "d" + cha.HitDie));
+            #endregion
+
+            #region RTL Saves
+            txt = new StreamReader("../../../Assets/AppData/RTL.txt");
+            text = txt.ReadLine();
+            readStrings.Clear();
+            while (text != null)
+            {
+                readStrings.Add(text);
+                text = txt.ReadLine();
+            }
+            sheetFields.Add(new Field(factor, defaultFont, boldFont, titleFont, panelPixelWhite, panelPixelBlack, "RTL SAVING THROWS", "Character Attribute",
+                readStrings, new Rectangle(867, 718, 233, 233)));
+            img = new FileStream("../../../Assets/AppImages/RTL active.png", FileMode.Open, FileAccess.Read);
+            sheetFields[sheetFields.Count - 1].ActiveT = Texture2D.FromStream(GraphicsDevice, img);
+            img = new FileStream("../../../Assets/AppImages/RTL inactive.png", FileMode.Open, FileAccess.Read);
+            sheetFields[sheetFields.Count - 1].InactiveT = Texture2D.FromStream(GraphicsDevice, img);
+
+            // labels
+            sheetStrings.Add(new StringField(factor, smallFont, sheetFields[sheetFields.Count - 1].Title, new Vector2(
+                sheetFields[sheetFields.Count - 1].StartPosition.X + sheetFields[sheetFields.Count - 1].StartPosition.Width / 2 - smallFont.MeasureString(sheetFields[sheetFields.Count - 1].Title).X / 2,
+                sheetFields[sheetFields.Count - 1].StartPosition.Y + sheetFields[sheetFields.Count - 1].StartPosition.Height + 10)));
+            sheetStrings.Add(new StringField(factor, smallFont, "SUCCESSES", new Vector2(
+                sheetFields[sheetFields.Count - 1].StartPosition.X + sheetFields[sheetFields.Count - 1].StartPosition.Width / 2 - smallFont.MeasureString("SUCCESSES").X / 2,
+                sheetFields[sheetFields.Count - 1].StartPosition.Y + 30)));
+            sheetStrings.Add(new StringField(factor, smallFont, "FAILURES", new Vector2(
+                sheetFields[sheetFields.Count - 1].StartPosition.X + sheetFields[sheetFields.Count - 1].StartPosition.Width / 2 - smallFont.MeasureString("FAILURES").X / 2,
+                sheetFields[sheetFields.Count - 1].StartPosition.Y + sheetFields[sheetFields.Count - 1].StartPosition.Height - 30 - smallFont.MeasureString("FAILURES").Y)));
+
+            for (int i = 0; i < 6; i++)
+                editableFields.Add(new EditableField(factor, new Rectangle(
+                    (int)(sheetFields[sheetFields.Count - 1].StartPosition.X + 42.5 * (i % 3 + 1) + 21 * (i % 3)),
+                    (int)(sheetFields[sheetFields.Count - 1].StartPosition.Y + 63.6 * (i / 3 + 1) + 21 * (i / 3)),
+                    21,21)));
+            img = new FileStream("../../../Assets/AppImages/RTLcircle active.png", FileMode.Open, FileAccess.Read);
+            for (int i = 0; i < 6; i++)
+                editableFields[i].ActiveT = Texture2D.FromStream(GraphicsDevice, img);
+            img = new FileStream("../../../Assets/AppImages/RTLcircle inactive.png", FileMode.Open, FileAccess.Read);
+            for (int i = 0; i < 6; i++)
+                editableFields[i].InactiveT = Texture2D.FromStream(GraphicsDevice, img);
             #endregion
 
             #endregion

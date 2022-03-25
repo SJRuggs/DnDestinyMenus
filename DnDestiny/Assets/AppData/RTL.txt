@@ -1,0 +1,7 @@
+Whenever you start your turn with 0 health points, you are dead, and you must make a special type of saving throw called an RTL saving throw. RTL stands for Returned to Light, the term Risen creatures use to describe someone who has died their final death, who can no longer be resurrected by any means. You make an RTL saving throw even if you have no physical body left. To make an RTL saving throw, roll a d20. If the roll is 10 or higher, you succeed. If the roll is 9 or lower, you fail.
+
+You make a single RTL saving throw on each turn you are at 0 health points. If you accumulate three successes before you accumulate three failures, your Light becomes stable and you no longer need to make RTL saving throws. Your Ghost can capture your Light at its next opportunity. If you accumulate three failures before you accumulate three successes, your Light fades away and you die your final death.
+
+Special Cases$When you make an RTL saving throw and roll a 1 on the d20, it counts as two failures. If you roll a 20, it counts as three successes. If you taske any damage while dead, nothing happens.
+
+Capturing Light$If your Ghost performs the Capture Light action on you, your Light becomes stable, and you immediately accumulate three successful RTL saving throws.

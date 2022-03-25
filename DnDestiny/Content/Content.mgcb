@@ -27,6 +27,13 @@
 /processorParam:TextureFormat=Compressed
 /build:DefaultFont.spritefont
 
+#begin ExtraLargeFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:ExtraLargeFont.spritefont
+
 #begin SmallFont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

@@ -78,8 +78,8 @@ namespace DnDestiny
                 }
             }
         }
-        public int MaxHP { get { return HitDie + Level * Stats[2]; } }
-        public int MaxShield { get { return HitDie + Level * (HitDie / 2 + 1); } }
+        public int MaxHP { get { return HitDie + (Level - 1) * Math.Max((Stats[2] - 10) / 2, 0); } }
+        public int MaxShield { get { return HitDie + (Level - 1) * (HitDie / 2 + 1); } }
         public int Initiative { get { return Math.Max((Stats[1] - 10) / 2, initiative); } set { initiative = value; } }
         public int ProfBonus { get { return (level - 1) / 4 + 2; } }
         public int AC 
